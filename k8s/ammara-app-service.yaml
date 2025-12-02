@@ -13,3 +13,39 @@ spec:
       targetPort: 5000
       protocol: TCP
       name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ammara-app-nodeport
+  labels:
+    app: ammara-app
+spec:
+  type: NodePort
+  selector:
+    app: ammara-app
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      nodePort: 30050
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ammara-app-lb
+  labels:
+    app: ammara-app
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"        # or omit for classic
+    # Optional: service.beta.kubernetes.io/aws-load-balancer-internal: "false"
+spec:
+  type: LoadBalancer
+  selector:
+    app: ammara-app
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+      name: http      
