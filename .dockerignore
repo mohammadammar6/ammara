@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+k8s/
+.dockerignore
+Dockerfile.mysql
+Dockerfile
+build_and_push_multiarch.sh
+.env
+.env.*
+.gitignore
+.vscode/
+

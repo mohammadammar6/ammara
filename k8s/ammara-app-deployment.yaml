@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ammara-app
+  labels:
+    app: ammara-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ammara-app
+  template:
+    metadata:
+      labels:
+        app: ammara-app
+    spec:
+      containers:
+        - name: ammara-app
+          image: devopsusr/ammara:v3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_HOST
+              value: ammara-mysql
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: marriage_app
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ammara-secrets
+                  key: mysql-root-password
+          envFrom:
+            - secretRef:
+                name: ammara-db-secret
+      restartPolicy: Always

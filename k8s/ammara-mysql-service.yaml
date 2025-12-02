@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ammara-mysql
+  labels:
+    app: ammara-mysql
+spec:
+  type: ClusterIP
+  selector:
+    app: ammara-mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
+      name: mysql

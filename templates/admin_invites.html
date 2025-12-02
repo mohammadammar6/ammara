@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Invites Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="hero-badge">Admin</div>
+          <h1 class="h4 mb-0">Invited Guests</h1>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm">Back</a>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary btn-sm">Logout</a>
+        </div>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-4">
+          <div class="card shadow-sm admin-stat">
+            <div class="card-body py-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted">Entries</span>
+                <span class="h5 mb-0">{{ invites|length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card shadow-sm admin-stat">
+            <div class="card-body py-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted">Total People</span>
+                <span class="h5 mb-0">{{ total_invited_people }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card shadow-sm admin-stat">
+            <div class="card-body py-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted">Latest Entry</span>
+                <span class="h6 mb-0">{% if invites %}{{ invites[0].created_at.strftime('%d %b %Y, %I:%M %p') }}{% else %}-{% endif %}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category=='error' else category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <div class="card shadow mb-4 admin-form-card">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h2 class="card-title h5 mb-0">Add Invite</h2>
+            <span class="badge bg-primary-subtle text-primary">Quick Entry</span>
+          </div>
+          <form method="POST" action="{{ url_for('admin_invites') }}" class="row g-3">
+            <div class="col-md-4">
+              <label for="person_name" class="form-label">Person Name</label>
+              <input type="text" id="person_name" name="person_name" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+              <label for="village_name" class="form-label">Village Name</label>
+              <input type="text" id="village_name" name="village_name" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+              <label for="total_people" class="form-label">Total People Invited</label>
+              <input type="number" id="total_people" name="total_people" min="1" value="1" class="form-control" required />
+            </div>
+            <div class="col-12 text-end">
+              <button type="submit" class="btn btn-primary">Save Invite</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card shadow">
+        <div class="card-body">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+            <div class="d-flex align-items-center gap-2">
+              <h2 class="h5 mb-0">Invite List</h2>
+              <span class="badge bg-primary">{{ invites|length }} entries</span>
+            </div>
+            <input type="search" id="search" class="form-control form-control-sm admin-search" placeholder="Search by name or village" />
+          </div>
+          <div class="d-flex justify-content-end mb-2">
+            <a href="{{ url_for('export_invites_csv') }}" class="btn btn-outline-primary btn-sm">Export CSV</a>
+          </div>
+          {% if invites %}
+            <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle" id="invites-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Person Name</th>
+                    <th>Village</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th style="width: 160px">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for inv in invites %}
+                  <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ inv.person_name }}</td>
+                    <td>{{ inv.village_name }}</td>
+                    <td>{{ inv.total_people }}</td>
+                    <td>{{ inv.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editModal{{ inv.id }}">Edit</button>
+                      <a href="{{ url_for('delete_invite', invite_id=inv.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this entry?')">Delete</a>
+                    </td>
+                  </tr>
+                  <!-- Edit Modal -->
+                  <div class="modal fade" id="editModal{{ inv.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Edit Invite</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="{{ url_for('edit_invite', invite_id=inv.id) }}">
+                          <div class="modal-body">
+                            <div class="mb-3">
+                              <label class="form-label">Person Name</label>
+                              <input type="text" name="person_name" class="form-control" value="{{ inv.person_name }}" required />
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label">Village Name</label>
+                              <input type="text" name="village_name" class="form-control" value="{{ inv.village_name }}" required />
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label">Total People</label>
+                              <input type="number" name="total_people" class="form-control" min="1" value="{{ inv.total_people }}" required />
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-muted mb-0">No invites yet. Add your first entry above.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Simple client-side filter
+      const search = document.getElementById('search');
+      const table = document.getElementById('invites-table');
+      if (search && table) {
+        search.addEventListener('input', () => {
+          const q = search.value.toLowerCase();
+          for (const row of table.querySelectorAll('tbody tr')) {
+            const cells = row.querySelectorAll('td');
+            const name = (cells[1]?.textContent || '').toLowerCase();
+            const village = (cells[2]?.textContent || '').toLowerCase();
+            row.style.display = (name.includes(q) || village.includes(q)) ? '' : 'none';
+          }
+        });
+      }
+    </script>
+  </body>
+  </html>

@@ -1,0 +1,11 @@
+FROM mysql:8.0
+
+# Do not bake root password into the image. Set MYSQL_ROOT_PASSWORD at runtime
+ENV MYSQL_DATABASE=marriage_app
+
+# Copy schema so MySQL official image initializes DB with the required tables
+COPY 001_create_schema.sql /docker-entrypoint-initdb.d/001_create_schema.sql
+
+EXPOSE 3306
+
+CMD ["mysqld"]

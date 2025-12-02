@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ammara-mysql
+  labels:
+    app: ammara-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ammara-mysql
+  template:
+    metadata:
+      labels:
+        app: ammara-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: devopsusr/ammara-mysql:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_DATABASE
+              value: marriage_app
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: ammara-mysql-pvc

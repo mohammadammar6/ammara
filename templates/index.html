@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Marriage Invitation - Mohamad Ammar &amp; Bushra Perwen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body{% if background_image_url %} style="background-image: url('{{ background_image_url }}'); background-size: cover; background-position: center; background-attachment: fixed;"{% endif %}>
+    <!-- Elegant minimal navbar -->
+    <nav class="navbar navbar-light bg-transparent py-3">
+      <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-semibold" href="#">Ammar &amp; Bushra</a>
+        <div class="d-none d-md-flex gap-3 nav-links">
+          <a href="#ceremony" class="nav-link">Ceremony</a>
+          <a href="#wishes" class="nav-link">Wishes</a>
+          <a href="{{ drive_link }}" target="_blank" class="btn btn-outline-primary btn-sm">Share Memories</a>
+        </div>
+      </div>
+    </nav>
+    <!-- Top-right memories widget -->
+    <div class="memories-widget position-fixed top-0 end-0 p-3">
+      <div class="card shadow-sm memories-card">
+        <div class="card-body text-center py-2 px-3">
+          <h6 class="mb-2">Share Your Memories</h6>
+          <a href="{{ drive_link }}" target="_blank" class="btn btn-primary btn-sm">
+            Upload Photos
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="overlay"></div>
+    <div class="container py-5">
+
+      <header class="text-center mb-5 hero">
+        <div class="hero-badge mx-auto mb-3">Wedding Invitation</div>
+        <h1 class="hero-title">Ammar <span class="amp">&amp;</span> Bushra</h1>
+        <p class="hero-subtitle">
+          You are lovingly invited to celebrate the marriage of
+          <strong>Mohamad Ammar</strong> &amp; <strong>Bushra Perwen</strong>.
+        </p>
+        <div id="countdown" class="countdown mt-2">
+          <div class="cd-item"><span id="cd-days">--</span><small>Days</small></div>
+          <div class="cd-item"><span id="cd-hours">--</span><small>Hours</small></div>
+          <div class="cd-item"><span id="cd-mins">--</span><small>Minutes</small></div>
+          <div class="cd-item d-none d-md-block"><span id="cd-secs">--</span><small>Seconds</small></div>
+        </div>
+      </header>
+
+      <section class="mb-5">
+        <div class="row align-items-center g-4 couple-section">
+          <div class="col-6 col-md-5 text-start order-1 order-md-1">
+            <div class="couple-card bride-card">
+              <img
+                src="{{ url_for('static', filename='images/bride.jpg') }}"
+                alt="Bride - Bushra Perwen"
+                class="img-fluid rounded-circle shadow couple-image"
+              />
+              <h3 class="mt-3">Bushra Perwen</h3>
+            </div>
+          </div>
+          <div class="col-6 col-md-5 text-end order-2 order-md-2 ms-auto">
+            <div class="couple-card groom-card">
+              <img
+                src="{{ url_for('static', filename='images/groom.jpg') }}"
+                alt="Groom - Mohamad Ammar"
+                class="img-fluid rounded-circle shadow couple-image"
+              />
+              <h3 class="mt-3">Mohamad Ammar</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+
+      <section class="mb-5" id="ceremony">
+        <div class="card shadow ceremony-card">
+          <div class="card-body">
+            <div class="text-center">
+              <h2 class="card-title mb-1">Ceremony Details</h2>
+              <p class="section-subtitle">Join us for two beautiful celebrations</p>
+            </div>
+
+            <div class="row g-4 mt-3">
+              <!-- Barat column -->
+              <div class="col-12 col-lg-6">
+                <div class="ceremony-block">
+                  <h3 class="ceremony-heading">Barat</h3>
+                  <div class="ceremony-grid">
+                    <div class="ceremony-item">
+                      <div class="ceremony-icon">📅</div>
+                      <div>
+                        <div class="label">Date</div>
+                        <div class="value">{{ barat_date }}</div>
+                      </div>
+                    </div>
+                    <div class="ceremony-item">
+                      <div class="ceremony-icon">⏰</div>
+                      <div>
+                        <div class="label">Time</div>
+                        <div class="value">{{ barat_time }}</div>
+                      </div>
+                    </div>
+                    <div class="ceremony-item">
+                      <div class="ceremony-icon">📍</div>
+                      <div>
+                        <div class="label">Venue</div>
+                        <div class="value">{{ venue }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-2">
+                    <a class="btn btn-outline-rose btn-sm" href="https://www.google.com/maps/search/{{ venue|urlencode }}" target="_blank">View Map</a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Walima column -->
+              <div class="col-12 col-lg-6">
+                <div class="ceremony-block">
+                  <h3 class="ceremony-heading">Walima</h3>
+                  <div class="ceremony-grid">
+                    <div class="ceremony-item">
+                      <div class="ceremony-icon">📅</div>
+                      <div>
+                        <div class="label">Date</div>
+                        <div class="value">{{ walima_date }}</div>
+                      </div>
+                    </div>
+                    <div class="ceremony-item">
+                      <div class="ceremony-icon">⏰</div>
+                      <div>
+                        <div class="label">Time</div>
+                        <div class="value">{{ walima_time }}</div>
+                      </div>
+                    </div>
+                    <div class="ceremony-item">
+                      <div class="ceremony-icon">📍</div>
+                      <div>
+                        <div class="label">Venue</div>
+                        <div class="value">{{ walima_venue }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-2">
+                    <a class="btn btn-outline-rose btn-sm" href="https://www.google.com/maps/search/{{ walima_venue|urlencode }}" target="_blank">View Map</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center mt-3">
+              <p class="mb-0 fst-italic">We would be honored to have your presence and blessings.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Removed large Share Your Memories section in favor of compact widget -->
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mb-3">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ 'danger' if category=='error' else category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <section class="mb-4" id="wishes">
+        <div class="card shadow wishes-card">
+          <div class="card-body">
+            <div class="text-center">
+              <h2 class="card-title mb-1">Leave Your Wishes</h2>
+              <p class="section-subtitle">Share your love and blessings with the couple</p>
+            </div>
+            <form method="POST" action="{{ url_for('index') }}" class="mt-3 wishes-form">
+              <div class="row g-3 justify-content-center">
+                <div class="col-md-8">
+                  <label for="name" class="form-label">Your Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    required
+                  />
+                </div>
+                <div class="col-md-8">
+                  <label for="message" class="form-label">Your Message</label>
+                  <textarea
+                    class="form-control"
+                    id="message"
+                    name="message"
+                    rows="3"
+                    placeholder="Write your blessings..."
+                    required
+                  ></textarea>
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary btn-lg px-4 wishes-btn">
+                  Submit Wishes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-5">
+        <h2 class="mb-3 text-center">Blessings from Loved Ones</h2>
+        {% if wishes %}
+          <div class="list-group">
+            {% for wish in wishes %}
+              <div class="list-group-item list-group-item-action flex-column align-items-start mb-2 shadow rounded wish-item">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ wish.name }}</h5>
+                  <small class="text-muted">
+                    {{ wish.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                  </small>
+                </div>
+                <p class="mb-1">{{ wish.message }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-center text-muted">No wishes yet. Be the first to bless the couple! 💕</p>
+        {% endif %}
+      </section>
+
+      <footer class="text-center text-muted small mt-4">
+        &copy; 2025 Wedding of Mohamad Ammar &amp; Bushra Perwen
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Precise countdown to 28 March 2026, 8:00 PM local time
+      (function(){
+        const target = new Date('2026-03-28T20:00:00');
+        const daysEl = document.getElementById('cd-days');
+        const hoursEl = document.getElementById('cd-hours');
+        const minsEl = document.getElementById('cd-mins');
+        const secsEl = document.getElementById('cd-secs');
+        const container = document.getElementById('countdown');
+
+        const tick = () => {
+          const now = new Date();
+          const diff = target - now;
+          if (diff <= 0) { container.innerHTML = '<div class="cd-item">It\'s today! 🎉</div>'; return; }
+          const days = Math.floor(diff / (1000*60*60*24));
+          const hours = Math.floor((diff / (1000*60*60)) % 24);
+          const mins = Math.floor((diff / (1000*60)) % 60);
+          const secs = Math.floor((diff / 1000) % 60);
+          daysEl.textContent = days;
+          hoursEl.textContent = hours;
+          minsEl.textContent = mins;
+          if (secsEl) secsEl.textContent = secs;
+        };
+        tick();
+        setInterval(tick, 1000);
+      })();
+    </script>
+  </body>
+</html>
