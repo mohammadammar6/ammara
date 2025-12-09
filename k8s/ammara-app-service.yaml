@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ammara-app
+  namespace: ammara-app
   labels:
     app: ammara-app
 spec:
@@ -17,24 +18,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ammara-app-nodeport
-  labels:
-    app: ammara-app
-spec:
-  type: NodePort
-  selector:
-    app: ammara-app
-  ports:
-    - port: 5000
-      targetPort: 5000
-      protocol: TCP
-      nodePort: 30050
-      name: http
----
-apiVersion: v1
-kind: Service
-metadata:
   name: ammara-app-lb
+  namespace: ammara-app
   labels:
     app: ammara-app
   annotations:

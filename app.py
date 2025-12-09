@@ -70,7 +70,7 @@ def create_app():
         wishes = Wish.query.order_by(Wish.created_at.desc()).all()
 
         barat_date_text = "28 March 2026"
-        barat_time_text = "8:00 PM"
+        barat_time_text = "8:00 AM"
         barat_venue_text = "Haji Jamil Akhter's home"
 
         walima_date_text = "30 March 2026"
