@@ -32,22 +32,22 @@ spec:
                 secretKeyRef:
                   name: ammara-secrets
                   key: mysql-root-password
-          readinessProbe:
-            httpGet: 
-              path: /healthz
-              port: 5000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 2
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:        
-              path: /live
-              port: 5000
-            initialDelaySeconds: 10
-            periodSeconds: 15
-            timeoutSeconds: 2
-            failureThreshold: 3                  
+          # readinessProbe:
+          #   httpGet: 
+          #     path: /healthz
+          #     port: 5000
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 10
+          #   timeoutSeconds: 2
+          #   failureThreshold: 3
+          # livenessProbe:
+          #   httpGet:        
+          #     path: /live
+          #     port: 5000
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 15
+          #   timeoutSeconds: 2
+          #   failureThreshold: 3                  
           envFrom:
             - secretRef:
                 name: ammara-db-secret
