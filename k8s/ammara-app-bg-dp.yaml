@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ammara-app
-          image: devopsusr/ammara:v3
+          image: devopsusr/ammara:v6
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
@@ -33,6 +33,9 @@ spec:
                 secretKeyRef:
                   name: ammara-secrets
                   key: mysql-root-password
+          envFrom:
+            - secretRef:
+                name: ammara-db-secret
           readynessProbe:
             httpGet: 
               path: /healthz
@@ -48,8 +51,5 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 15
             timeoutSeconds: 2
-            failureThreshold: 3                  
-          envFrom:
-            - secretRef:
-                name: ammara-db-secret
+            failureThreshold: 3
       restartPolicy: Always
