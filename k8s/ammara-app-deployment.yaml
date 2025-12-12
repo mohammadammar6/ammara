@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ammara-app
-  namespace: ammara-app
   labels:
     app: ammara-app
 spec:
@@ -10,12 +9,10 @@ spec:
   selector:
     matchLabels:
       app: ammara-app
-      version: v1
   template:
     metadata:
       labels:
         app: ammara-app
-        version: v1
     spec:
       containers:
         - name: ammara-app
