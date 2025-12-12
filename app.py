@@ -67,7 +67,8 @@ def create_app():
                 flash("Thank you for your wishes! 💌", "success")
                 return redirect(url_for("index"))
 
-        wishes = Wish.query.order_by(Wish.created_at.desc()).all()
+        # Only show wishes to admin; visitors won't see others' messages
+        wishes = Wish.query.order_by(Wish.created_at.desc()).all() if is_logged_in() else []
 
         barat_date_text = "28 March 2026"
         barat_time_text = "8:00 AM"
@@ -79,10 +80,10 @@ def create_app():
 
         # Prefer a project-local background image at `static/images/background.jpg`.
         # If not present, do not set a background so templates can render without it.
-        static_bg_rel = os.path.join("static", "images", "background.jpg")
-        static_bg_abs = os.path.join(app.root_path, "static", "images", "background.jpg")
+        static_bg_rel = os.path.join("static", "images", "background.jpeg")
+        static_bg_abs = os.path.join(app.root_path, "static", "images", "background.jpeg")
         if os.path.exists(static_bg_abs):
-            background_image_url = url_for('static', filename='images/background.jpg')
+            background_image_url = url_for('static', filename='images/background.jpeg')
         else:
             background_image_url = None
 
@@ -258,6 +259,41 @@ def create_app():
         total_invited_people = sum(i.total_people for i in invites)
         return render_template("admin_invites.html", invites=invites, total_invited_people=total_invited_people)
 
+    @app.route("/admin/wishes")
+    def admin_wishes():
+        if not is_logged_in():
+            return redirect(url_for("login"))
+        wishes = Wish.query.order_by(Wish.created_at.desc()).all()
+        return render_template("admin_wishes.html", wishes=wishes)
+
+    # --- Ceremony details standalone page ---
+    @app.route("/ceremony")
+    def ceremony():
+        barat_date_text = "28 March 2026"
+        # Barat departure details
+        barat_time_text = "8:00 AM"
+        barat_venue_text = "Haji Mohammad Jamil Akhter's Residence"
+
+        # Barat arrival details
+        barat_arrival_time_text = "6:00 PM"
+        barat_arrival_venue_text = "Mohammad Yunus's Residence"
+
+        walima_date_text = "30 March 2026"
+        walima_time_text = "12:00 PM"
+        walima_venue_text = "Haji Mohammad Jamil Akhter's Residence"
+
+        return render_template(
+            "ceremony.html",
+            barat_date=barat_date_text,
+            barat_time=barat_time_text,
+            venue=barat_venue_text,
+            barat_arrival_time=barat_arrival_time_text,
+            barat_arrival_venue=barat_arrival_venue_text,
+            walima_date=walima_date_text,
+            walima_time=walima_time_text,
+            walima_venue=walima_venue_text,
+        )
+
     @app.route("/admin/invites/<int:invite_id>/delete", methods=["GET"])  # simple GET to keep UI minimal
     def delete_invite(invite_id):
         if not is_logged_in():
@@ -311,9 +347,87 @@ def create_app():
         buf.seek(0)
         return app.response_class(buf.read(), mimetype='text/csv', headers={'Content-Disposition': 'attachment; filename=invites.csv'})
 
+    # --- Travel & Accommodation page ---
+    @app.route("/travel")
+    def travel():
+        # Structured travel information
+        travel_info = {
+            "reporting_time": "8:00 AM",
+            "departure_time": "9:00 AM",
+            "meeting_point": "Haji Mohammad Jamil Akhter's Residence",
+            "assemble_note": "Please assemble at Haji Mohammad Jamil Akhter's Residence at 8 AM from where the Barat will depart.",
+            "map_url": "https://maps.app.goo.gl/uHtu9vjDY2Ue2Pbd9"
+        }
+
+        # Structured accommodation information
+        accommodation_info = {
+            "hotel_name": "Shiv Bajrang Hotel",
+            "address": "Ward No.3, Sangam Vihar, Railway Station, West of, near Bandhan Microfinance Branch, Gopalganj, Chitu Tola, Bihar 841440",
+            "map_code": "C9GV+V2 Gopalganj, Bihar",
+            "map_url": "https://maps.app.goo.gl/Rmt7F2WYKJVKNC4XA"
+        }
+        # Prefer PNG if present; fallback to existing SVG placeholder
+        png_path = os.path.join(app.root_path, 'static', 'images', 'hotel-image.png')
+        if os.path.exists(png_path):
+            hotel_image_url = url_for('static', filename='images/hotel-image.png')
+        else:
+            hotel_image_url = url_for('static', filename='images/hotel.svg')
+        return render_template(
+            "travel.html",
+            travel_info=travel_info,
+            accommodation_info=accommodation_info,
+            hotel_image_url=hotel_image_url,
+        )
+
+    @app.route("/gallery")
+    def gallery():
+        # Determine a top hero image for the event
+        event_img_candidates = [
+            url_for('static', filename='images/event.jpg'),
+            url_for('static', filename='images/background.jpeg'),
+        ]
+        event_image_url = None
+        for candidate in event_img_candidates:
+            # Convert url_for path to absolute file path for existence check
+            rel_path = candidate.split('/static/', 1)[1]
+            abs_path = os.path.join(app.root_path, 'static', rel_path)
+            if os.path.exists(abs_path):
+                event_image_url = candidate
+                break
+
+        drive_folder_url = app.config.get(
+            "DRIVE_FOLDER_URL",
+            "https://drive.google.com/drive/folders/DUMMY_FOLDER_ID",
+        )
+        # Extract folder ID from URL (supports /folders/<id> and id=<id>)
+        drive_folder_id = None
+        try:
+            if "/folders/" in drive_folder_url:
+                drive_folder_id = drive_folder_url.split("/folders/")[1].split("?")[0].strip()
+            elif "id=" in drive_folder_url:
+                import urllib.parse as up
+                qs = up.urlparse(drive_folder_url).query
+                params = up.parse_qs(qs)
+                ids = params.get("id")
+                if ids:
+                    drive_folder_id = ids[0]
+        except Exception:
+            drive_folder_id = None
+        raw_ids = app.config.get("DRIVE_IMAGE_IDS") or os.getenv("DRIVE_IMAGE_IDS", "")
+        drive_ids = [s.strip() for s in raw_ids.split(",") if s.strip()] if raw_ids else []
+        image_urls = [f"https://drive.google.com/uc?export=view&id={fid}" for fid in drive_ids]
+
+        return render_template(
+            "gallery.html",
+            event_image_url=event_image_url,
+            drive_folder_url=drive_folder_url,
+            drive_folder_id=drive_folder_id,
+            image_urls=image_urls,
+        )
+
     return app
 
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True)
+    app.run()

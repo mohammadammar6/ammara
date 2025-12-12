@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travel & Accommodation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  <style>
+    /* Travel page scoped color overrides */
+    :root {
+      --travel-bg: #eaf4ff; /* baby blue mist */
+      --travel-heading: #0b1d46; /* royal navy */
+      --travel-text: #4b5563; /* slate/state gray */
+      --travel-button: #4f7bd9; /* soft royal blue */
+      --travel-border: #bcd9ff; /* light blue */
+      --travel-accent: #4f7bd9; /* pills/icons */
+    }
+
+    .page-container { max-width: 920px; margin: 0 auto; padding: 24px; }
+    .travel-hero { text-align: center; margin-bottom: 16px; }
+
+    /* Background */
+    body.travel-bg { background-color: var(--travel-bg); }
+
+    /* Headings to royal navy */
+    .travel-hero h1,
+    .card-title,
+    .section-header h2,
+    .navbar-brand { color: var(--travel-heading) !important; }
+
+    /* Normal text to state/slate gray */
+    .travel-hero p,
+    .section-subtitle,
+    .details-list .label,
+    .details-list .value,
+    .ceremony-item .label,
+    .ceremony-item .value,
+    .nav-link,
+    .hint { color: var(--travel-text) !important; }
+
+    /* Cards/boxes to white with light blue borders */
+    .card.shadow,
+    .ceremony-card,
+    .ceremony-card .card-body { background: #ffffff !important; border: 1px solid var(--travel-border) !important; }
+
+    /* Buttons to soft royal blue */
+    .btn { display: inline-block; padding: 8px 12px; border-radius: 999px; text-decoration: none; }
+    .btn-rose { background: var(--travel-button) !important; color: #ffffff !important; border: 1px solid var(--travel-button) !important; }
+    .btn-outline-rose { border: 1px solid var(--travel-button) !important; color: var(--travel-button) !important; background: transparent !important; }
+
+    /* Decorative graphics and pills */
+    .decor-wave { width: 100%; height: 90px; display: block; opacity: 0.18; }
+    .decor-wave path { fill: var(--travel-button) !important; }
+    .pill-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 10px 0 4px; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; background: rgba(79, 123, 217, 0.08); color: var(--travel-accent); border: 1px solid rgba(79, 123, 217, 0.25); }
+    .pill .icon { font-size: 16px; }
+
+    .card-divider { height: 1px; background: linear-gradient(90deg, rgba(188,217,255,0) 0%, rgba(188,217,255,0.9) 50%, rgba(188,217,255,0) 100%); margin: 10px 0 6px; }
+
+    /* Hotel image responsiveness */
+    .hotel-image {
+      display: block;
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--travel-border);
+    }
+    /* Ensure images never overflow their container */
+    .col-12.col-lg-6 img { max-width: 100%; height: auto; }
+
+    /* Accommodation details layout improvements */
+    .details-list { margin-top: 8px; }
+    .details-list .item { display: flex; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .details-list .label { min-width: 140px; flex: 0 0 140px; }
+    .details-list .value { flex: 1 1 auto; word-break: break-word; }
+
+    .section-header { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .section-header .emoji { font-size: 20px; }
+    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+    .hint { font-size: 0.92rem; margin-top: 6px; text-align: center; }
+
+    @media (max-width: 640px) {
+      .page-container { padding: 16px; }
+      /* Stack label/value vertically on small screens for better fit */
+      .details-list .label { min-width: 0; flex: 1 1 100%; }
+      .details-list .value { flex: 1 1 100%; }
+    }
+  </style>
+ </head>
+ <body class="travel-bg">
+  <nav class="navbar navbar-light bg-transparent py-3">
+    <div class="container">
+      <div class="d-flex w-100 justify-content-between align-items-center">
+        <a class="navbar-brand fw-semibold" href="{{ url_for('index') }}">Ammar &amp; Bushra</a>
+        <div class="d-none d-md-flex gap-3 nav-links align-items-center">
+          <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+          <a href="{{ url_for('ceremony') }}" class="nav-link">Ceremony</a>
+          <a href="{{ url_for('gallery') }}" class="nav-link">Gallery</a>
+          <a href="{{ url_for('travel') }}" class="nav-link travel-link">Travel &amp; Stay</a>
+          {% if session.get('root_logged_in') %}
+            <a href="{{ url_for('admin_invites') }}" class="nav-link">Admin Invites</a>
+            <a href="{{ url_for('admin_wishes') }}" class="nav-link">Admin Wishes</a>
+            <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+          {% else %}
+            <a href="{{ url_for('login') }}" class="nav-link">Admin Login</a>
+          {% endif %}
+        </div>
+        <button class="navbar-toggler d-inline d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNavTravel" aria-controls="mobileNavTravel" aria-expanded="false" aria-label="Toggle navigation" style="border: none;">
+          <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+        </button>
+      </div>
+      <div class="collapse d-md-none mt-2" id="mobileNavTravel">
+        <div class="d-flex flex-column gap-2 p-2 rounded" style="background: rgba(255,255,255,0.85); border: 1px solid rgba(15,23,42,0.1);">
+          <a href="{{ url_for('index') }}" class="nav-link px-2">Home</a>
+          <a href="{{ url_for('ceremony') }}" class="nav-link px-2">Ceremony</a>
+          <a href="{{ url_for('gallery') }}" class="nav-link px-2">Gallery</a>
+          <a href="{{ url_for('travel') }}" class="nav-link px-2">Travel &amp; Stay</a>
+          {% if session.get('root_logged_in') %}
+            <a href="{{ url_for('admin_invites') }}" class="nav-link px-2">Admin Invites</a>
+            <a href="{{ url_for('admin_wishes') }}" class="nav-link px-2">Admin Wishes</a>
+            <a href="{{ url_for('logout') }}" class="nav-link px-2">Logout</a>
+          {% else %}
+            <a href="{{ url_for('login') }}" class="nav-link px-2">Admin Login</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="page-container">
+    <div class="travel-hero fade-in">
+      <!-- <div class="hero-badge mx-auto mb-2">Travel &amp; Stay</div> -->
+      <h1>Travel &amp; Accommodation</h1>
+      <p>Key information for departure and staying comfortably</p>
+      <!-- Decorative wave graphic -->
+      <!-- <svg class="decor-wave" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,60 C240,120 480,0 720,60 C960,120 1200,20 1440,80 L1440,180 L0,180 Z" fill="#9d174d"></path>
+      </svg> -->
+    </div>
+
+    <div class="card shadow ceremony-card fade-in">
+      <div class="card-body">
+        <div class="text-center">
+          <div class="section-header">
+            <span class="emoji">🚌</span>
+            <h2 class="card-title mb-1">Travel</h2>
+          </div>
+          <p class="section-subtitle">Departure details</p>
+        </div>
+        <div class="ceremony-item mt-3">
+          <div class="ceremony-icon">🚌</div>
+          <div>
+            <div class="label">Assemble</div>
+            <div class="value">{{ travel_info.assemble_note }}</div>
+          </div>
+        </div>
+        <div class="pill-badges">
+          <div class="pill"><span class="icon">⏰</span><span>{{ travel_info.reporting_time }}</span></div>
+          <div class="pill"><span class="icon">🕘</span><span>{{ travel_info.departure_time }}</span></div>
+          <div class="pill"><span class="icon">📍</span><span>{{ travel_info.meeting_point }}</span></div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="details-list">
+          <div class="item">
+            <div class="label">Reporting Time</div>
+            <div class="value">{{ travel_info.reporting_time }}</div>
+          </div>
+          <div class="item">
+            <div class="label">Departure Time</div>
+            <div class="value">{{ travel_info.departure_time }}</div>
+          </div>
+          <div class="item">
+            <div class="label">Meeting Point</div>
+            <div class="value">{{ travel_info.meeting_point }}</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-rose" href="{{ travel_info.map_url }}" target="_blank">View Barat Route</a>
+        </div>
+        <div class="hint">Tip: Arrive 10–15 minutes early to avoid delays.</div>
+      </div>
+    </div>
+
+    <div class="card shadow ceremony-card fade-in">
+      <div class="card-body">
+        <div class="text-center">
+          <div class="section-header">
+            <span class="emoji">🏨</span>
+            <h2 class="card-title mb-1">Accommodation</h2>
+          </div>
+          <p class="section-subtitle">Hotel information</p>
+        </div>
+        <div class="row g-3 align-items-center mt-2">
+          <div class="col-12 col-lg-6">
+            <div class="ceremony-item">
+              <div class="ceremony-icon">🏨</div>
+              <div>
+                <div class="label">Hotel Name</div>
+                <div class="value">{{ accommodation_info.hotel_name }}</div>
+              </div>
+            </div>
+            <div class="pill-badges">
+              <div class="pill"><span class="icon">📍</span><span>{{ accommodation_info.map_code }}</span></div>
+            </div>
+            <div class="card-divider"></div>
+            <div class="details-list">
+              <div class="item">
+                <div class="label">Address</div>
+                <div class="value">{{ accommodation_info.address }}</div>
+              </div>
+              <div class="item">
+                <div class="label">Map Location</div>
+                <div class="value">{{ accommodation_info.map_code }}</div>
+              </div>
+              <div class="item">
+                <div class="label">Map Link</div>
+                <div class="value"><a href="{{ accommodation_info.map_url }}" target="_blank">Open Hotel in Maps</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            {% if hotel_image_url %}
+              <img src="{{ hotel_image_url }}" alt="Hotel image" class="hotel-image shadow-sm img-fluid" />
+              <div class="hint">Image for reference; actual rooms may vary.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" style="display:none"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ceremony Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <style>
+      /* Ceremony page scoped color overrides */
+      :root {
+        --ceremony-bg: #eaf4ff; /* baby blue mist */
+        --ceremony-heading: #0b1d46; /* royal navy */
+        --ceremony-text: #4b5563; /* slate/state gray */
+        --ceremony-button: #4f7bd9; /* soft royal blue */
+        --ceremony-border: #bcd9ff; /* light blue */
+        --ceremony-accent: #4f7bd9; /* for icons/pills */
+      }
+
+      .page-container { max-width: 980px; margin: 0 auto; padding: 24px; }
+
+      /* Background */
+      body.ceremony-bg {
+        background-color: var(--ceremony-bg);
+      }
+
+      /* Cards/boxes to white with light blue borders */
+      .ceremony-card,
+      .ceremony-card .card-body,
+      .timeline-card,
+      .ceremony-block,
+      .timeline-item .timeline-card,
+      .card.shadow {
+        background: #ffffff !important;
+        border: 1px solid var(--ceremony-border) !important;
+      }
+
+      /* Headings to royal navy */
+      .ceremony-hero h1,
+      .ceremony-heading,
+      .card-title,
+      .section-header h2,
+      .timeline-card strong,
+      .navbar-brand {
+        color: var(--ceremony-heading) !important;
+      }
+
+      /* Normal text to state/slate gray */
+      .ceremony-hero p,
+      .section-subtitle,
+      .label,
+      .value,
+      .hint,
+      .nav-link,
+      .text-muted,
+      .ceremony-item div,
+      .ceremony-item .label,
+      .ceremony-item .value {
+        color: var(--ceremony-text) !important;
+      }
+
+      /* Buttons to soft royal blue */
+      .btn-rose {
+        background: var(--ceremony-button) !important;
+        color: #ffffff !important;
+        border-radius: 999px;
+        border: 1px solid var(--ceremony-button) !important;
+      }
+
+      .btn-outline-rose {
+        border: 1px solid var(--ceremony-button) !important;
+        color: var(--ceremony-button) !important;
+        border-radius: 999px;
+        background: transparent !important;
+      }
+
+      /* Decorative elements and pills aligned to new palette */
+      .decor-wave { width: 100%; height: 90px; display: block; opacity: 0.18; }
+      .decor-wave path { fill: var(--ceremony-button) !important; }
+
+      .pill-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 10px 0 4px; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
+        background: rgba(79, 123, 217, 0.08);
+        color: var(--ceremony-accent);
+        border: 1px solid rgba(79, 123, 217, 0.25);
+      }
+      .pill .icon { font-size: 16px; }
+
+      .card-divider {
+        height: 1px;
+        background: linear-gradient(90deg, rgba(188,217,255,0) 0%, rgba(188,217,255,0.9) 50%, rgba(188,217,255,0) 100%);
+        margin: 10px 0 6px;
+      }
+
+      /* Maintain layout, minor spacing utilities unchanged */
+      .section-header { display: flex; align-items: center; justify-content: center; gap: 8px; }
+      .section-header .emoji { font-size: 20px; }
+      .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+      .hint { font-size: 0.92rem; margin-top: 6px; text-align: center; }
+
+      @media (max-width: 640px) { .page-container { padding: 16px; } }
+    </style>
+  </head>
+  <body class="ceremony-bg">
+    <nav class="navbar navbar-light bg-transparent py-3">
+      <div class="container">
+        <div class="d-flex w-100 justify-content-between align-items-center">
+          <a class="navbar-brand fw-semibold" href="{{ url_for('index') }}">Ammar &amp; Bushra</a>
+          <div class="d-none d-md-flex gap-3 nav-links align-items-center">
+            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('ceremony') }}" class="nav-link">Ceremony</a>
+            <a href="{{ url_for('gallery') }}" class="nav-link">Gallery</a>
+            <a href="{{ url_for('travel') }}" class="nav-link travel-link">Travel &amp; Stay</a>
+            {% if session.get('root_logged_in') %}
+              <a href="{{ url_for('admin_invites') }}" class="nav-link">Admin Invites</a>
+              <a href="{{ url_for('admin_wishes') }}" class="nav-link">Admin Wishes</a>
+              <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            {% else %}
+              <a href="{{ url_for('login') }}" class="nav-link">Admin Login</a>
+            {% endif %}
+          </div>
+          <button class="navbar-toggler d-inline d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNavCeremony" aria-controls="mobileNavCeremony" aria-expanded="false" aria-label="Toggle navigation" style="border: none;">
+            <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+          </button>
+        </div>
+        <div class="collapse d-md-none mt-2" id="mobileNavCeremony">
+          <div class="d-flex flex-column gap-2 p-2 rounded" style="background: rgba(255,255,255,0.85); border: 1px solid rgba(15,23,42,0.1);">
+            <a href="{{ url_for('index') }}" class="nav-link px-2">Home</a>
+            <a href="{{ url_for('ceremony') }}" class="nav-link px-2">Ceremony</a>
+            <a href="{{ url_for('gallery') }}" class="nav-link px-2">Gallery</a>
+            <a href="{{ url_for('travel') }}" class="nav-link px-2">Travel &amp; Stay</a>
+            {% if session.get('root_logged_in') %}
+              <a href="{{ url_for('admin_invites') }}" class="nav-link px-2">Admin Invites</a>
+              <a href="{{ url_for('admin_wishes') }}" class="nav-link px-2">Admin Wishes</a>
+              <a href="{{ url_for('logout') }}" class="nav-link px-2">Logout</a>
+            {% else %}
+              <a href="{{ url_for('login') }}" class="nav-link px-2">Admin Login</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container py-5 page-container">
+      <div class="ceremony-hero fade-in text-center">
+        <!-- <div class="hero-badge mx-auto mb-2">Wedding Schedule</div> -->
+        <h1>Ceremony Details</h1>
+        <p>Key moments for Barat and Walima celebrations</p>
+        <!-- <svg class="decor-wave" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,60 C240,120 480,0 720,60 C960,120 1200,20 1440,80 L1440,180 L0,180 Z" fill="#9d174d"></path>
+        </svg> -->
+      </div>
+
+      <div class="card shadow ceremony-card fade-in">
+        <div class="card-body">
+          <div class="text-center">
+            <div class="section-header">
+              <span class="emoji">🎉</span>
+              <h2 class="card-title mb-1">Ceremony Details</h2>
+            </div>
+            <p class="section-subtitle">Join us for two beautiful celebrations</p>
+          </div>
+
+          <div class="row g-4 mt-3">
+            <div class="col-12 col-lg-6">
+              <div class="ceremony-block">
+                <h3 class="ceremony-heading" style="--ceremony-heading: #0b63a5;">Barat</h3>
+
+                <!-- Departure of Barat -->
+                <h4 class="ceremony-heading">Departure of Barat</h4>
+                <div class="pill-badges">
+                  <div class="pill"><span class="icon">📅</span><span>{{ barat_date }}</span></div>
+                  <div class="pill"><span class="icon">⏰</span><span>{{ barat_time }}</span></div>
+                  <div class="pill"><span class="icon">📍</span><span>{{ venue }}</span></div>
+                </div>
+                <div class="card-divider"></div>
+                <div class="ceremony-grid">
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">📅</div>
+                    <div>
+                      <div class="label">Date</div>
+                      <div class="value">{{ barat_date }}</div>
+                    </div>
+                  </div>
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">⏰</div>
+                    <div>
+                      <div class="label">Time</div>
+                      <div class="value">{{ barat_time }}</div>
+                    </div>
+                  </div>
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">📍</div>
+                    <div>
+                      <div class="label">Venue</div>
+                      <div class="value">{{ venue }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Arrival of Barat -->
+                <h4 class="ceremony-heading mt-3">Arrival of Barat</h4>
+                <div class="pill-badges">
+                  <div class="pill"><span class="icon">📅</span><span>{{ barat_date }}</span></div>
+                  <div class="pill"><span class="icon">⏰</span><span>{{ barat_arrival_time }}</span></div>
+                  <div class="pill"><span class="icon">📍</span><span>{{ barat_arrival_venue }}</span></div>
+                </div>
+                <div class="card-divider"></div>
+                <div class="ceremony-grid">
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">📅</div>
+                    <div>
+                      <div class="label">Date</div>
+                      <div class="value">{{ barat_date }}</div>
+                    </div>
+                  </div>
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">⏰</div>
+                    <div>
+                      <div class="label">Time</div>
+                      <div class="value">{{ barat_arrival_time }}</div>
+                    </div>
+                  </div>
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">📍</div>
+                    <div>
+                      <div class="label">Venue</div>
+                      <div class="value">{{ barat_arrival_venue }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="btn-row">
+                  <a class="btn btn-rose" href="https://maps.app.goo.gl/uHtu9vjDY2Ue2Pbd9" target="_blank">View Barat Route</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+              <div class="ceremony-block">
+                <h3 class="ceremony-heading" style="--ceremony-heading: #0b63a5;">Walima</h3>
+                <div class="pill-badges">
+                  <div class="pill"><span class="icon">📅</span><span>{{ walima_date }}</span></div>
+                  <div class="pill"><span class="icon">⏰</span><span>{{ walima_time }}</span></div>
+                  <div class="pill"><span class="icon">📍</span><span>{{ walima_venue }}</span></div>
+                </div>
+                <div class="card-divider"></div>
+                <div class="ceremony-grid">
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">📅</div>
+                    <div>
+                      <div class="label">Date</div>
+                      <div class="value">{{ walima_date }}</div>
+                    </div>
+                  </div>
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">⏰</div>
+                    <div>
+                      <div class="label">Time</div>
+                      <div class="value">{{ walima_time }}</div>
+                    </div>
+                  </div>
+                  <div class="ceremony-item">
+                    <div class="ceremony-icon">📍</div>
+                    <div>
+                      <div class="label">Venue</div>
+                      <div class="value">{{ walima_venue }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="btn-row">
+                  <a class="btn btn-rose" href="https://maps.app.goo.gl/uHtu9vjDY2Ue2Pbd9" target="_blank">View Venue Map</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <p class="mb-0 fst-italic">We would be honored to have your presence and blessings.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Simple timeline section -->
+      <div class="timeline mt-4 fade-in">
+        <div class="timeline-item">
+          <div class="timeline-card">
+            <div class="d-flex justify-content-between">
+              <strong>Barat Departure</strong>
+              <span>{{ barat_date }} — {{ barat_time }}</span>
+            </div>
+            <div class="text-muted">From {{ venue }}</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-card">
+            <div class="d-flex justify-content-between">
+              <strong>Barat Arrival</strong>
+              <span>{{ barat_date }} — {{ barat_arrival_time }}</span>
+            </div>
+            <div class="text-muted">At {{ barat_arrival_venue }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint mt-2">We would be honored to have your presence and blessings.</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

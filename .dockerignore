@@ -9,4 +9,7 @@ build_and_push_multiarch.sh
 .env.*
 .gitignore
 .vscode/
-
+.venv/
+jenkins-setup
+cert-manager/
+images/

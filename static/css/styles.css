@@ -1,3 +1,10 @@
+/* Travel page background (baby blue mist) */
+.travel-bg {
+  background: linear-gradient(135deg, rgba(234,244,255,1) 0%, rgba(228,240,255,1) 50%, rgba(220,236,255,1) 100%);
+  min-height: 100vh;
+}
+
+.shadow-sm { box-shadow: 0 6px 16px -8px rgba(17,24,39,0.25); }
 /* Theme variables for consistent palette */
 :root {
   --text: #0f172a;
@@ -22,8 +29,9 @@ body {
 .overlay {
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.4) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 40%, rgba(255,255,255,0.1) 100%);
   pointer-events: none;
+  z-index: 0;
 }
 
 .container {
@@ -59,6 +67,14 @@ body {
 
 /* Hero section */
 .hero { max-width: 920px; margin-left: auto; margin-right: auto; }
+.hero-container {
+  min-height: calc(100svh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.hero-content { padding: 16px; }
 .hero-badge {
   display: inline-block;
   padding: 0.35rem 0.75rem;
@@ -74,65 +90,93 @@ body {
   font-weight: 700;
   font-size: clamp(2.2rem, 5vw, 4rem);
   line-height: 1.1;
-  color: var(--text);
+  color: #fde2e8; /* off-white with pink tint */
 }
 .hero-title .amp { color: #dc4d6b; }
-.hero-subtitle { margin-top: 0.5rem; color: #374151; }
+.hero-subtitle {
+  margin-top: 0.5rem;
+  color: #ffffff; /* improve contrast */
+  font-size: clamp(1.1rem, 5.5vw, 2rem);
+  line-height: 1.3;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.35); /* legibility on photos */
+}
+.script-subtitle {
+  font-family: 'Monsieur La Doulaise', cursive;
+  font-weight: 400;
+  font-size: clamp(1.4rem, 7.5vw, 2.6rem);
+}
 .section-subtitle { color: var(--muted); }
 
 /* Countdown */
 .countdown { display: inline-flex; gap: 1rem; }
-.cd-item { background: rgba(255,255,255,0.85); border: 1px solid rgba(15,23,42,0.08); border-radius: 0.75rem; padding: 0.5rem 0.75rem; }
-.cd-item span { font-weight: 700; font-size: 1.125rem; color: #0f172a; display: block; }
-.cd-item small { font-size: 0.75rem; color: #6b7280; display: block; }
+.cd-item { background: transparent; border: none; border-radius: 0.75rem; padding: 0.5rem 0.75rem; box-shadow: none; }
+.cd-item span { font-weight: 700; font-size: 1.125rem; color: #ffffff; display: block; }
+.cd-item small { font-size: 0.75rem; color: #e5e7eb; display: block; }
 
-/* Ceremony */
+/* Top-right countdown widget */
+.countdown-widget {
+  position: fixed;
+  top: 12px;
+  right: 10px;
+  z-index: 1050;
+  background: rgba(15,23,42,0.45);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 8px 24px -10px rgba(15,23,42,0.5);
+  padding: 6px 8px;
+}
+
+/* Ceremony (baby blue mist) */
+.ceremony-bg {
+  background: linear-gradient(135deg, rgba(234,244,255,1) 0%, rgba(228,240,255,1) 50%, rgba(220,236,255,1) 100%);
+  min-height: 100vh;
+}
 .ceremony-card {
-  background: linear-gradient(135deg, var(--rose-50) 0%, var(--rose-100) 100%);
-  border: 1px solid rgba(220, 77, 107, 0.18);
+  background: #ffffff; /* cards/boxes to white */
+  border: 1px solid #cfe4ff; /* light blue border */
 }
 .ceremony-card .card-title {
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 600;
-  color: var(--rose-700);
+  color: #0b2a4a; /* headings to royal navy */
 }
 .ceremony-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
-.ceremony-block { background: rgba(255,255,255,0.7); border: 1px solid rgba(220,77,107,0.1); border-radius: 0.75rem; padding: 1rem; }
-.ceremony-heading { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; color: var(--rose-700); margin-bottom: 0.75rem; }
+.ceremony-block { background: #ffffff; border: 1px solid #cfe4ff; border-radius: 0.75rem; padding: 1rem; }
+.ceremony-heading { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; color: #0b2a4a; margin-bottom: 0.75rem; }
 .ceremony-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background: rgba(255,255,255,0.7);
+  background: #ffffff;
   border-radius: 0.75rem;
-  border: 1px solid rgba(220, 77, 107, 0.12);
+  border: 1px solid #cfe4ff;
 }
 .ceremony-icon { font-size: 1.25rem; }
 .label { font-size: 0.85rem; color: #6b7280; }
-.value { font-weight: 600; color: #374151; }
+.value { font-weight: 600; color: #4b5563; /* normal text to slate gray */ }
 
-.btn-outline-rose {
-  color: #9d174d;
-  border-color: rgba(220, 77, 107, 0.5);
-}
-.btn-outline-rose:hover {
+.ceremony-bg .btn-rose,
+.travel-bg .btn-rose {
+  background-color: #3b82f6; /* soft royal blue */
   color: #fff;
-  background-color: #e11d48;
-  border-color: #e11d48;
+  border: 1px solid #3b82f6;
 }
+.ceremony-bg .btn-rose:hover,
+.travel-bg .btn-rose:hover { background-color: #2563eb; border-color: #2563eb; }
+.ceremony-bg .btn-outline-rose,
+.travel-bg .btn-outline-rose { color: #3b82f6; border: 1px solid #3b82f6; }
+.ceremony-bg .btn-outline-rose:hover,
+.travel-bg .btn-outline-rose:hover { background-color: #2563eb; color: #fff; border-color: #2563eb; }
 
 /* Wishes */
 .wishes-card {
   background: linear-gradient(135deg, var(--blue-50) 0%, var(--blue-100) 100%);
   border: 1px solid rgba(29, 78, 216, 0.16);
-  max-width: 760px;
-  margin-left: auto;
-  margin-right: auto;
 }
 .wishes-form { max-width: 680px; margin-left: auto; margin-right: auto; }
 .wish-item { border: 1px solid rgba(17, 24, 39, 0.08); }
@@ -141,6 +185,30 @@ body {
 .btn-primary { background-color: var(--blue-600); border-color: var(--blue-600); }
 .btn-primary:hover { background-color: var(--blue-700); border-color: var(--blue-700); }
 .wishes-btn { box-shadow: 0 10px 20px -10px rgba(29, 78, 216, 0.35); }
+
+/* Compact floating wishes widget */
+.wishes-widget {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 300px;
+  z-index: 1050;
+}
+.wishes-widget .card {
+  border-radius: 12px;
+  background: rgba(255,255,255,0.95);
+}
+.wishes-widget .card-title { font-size: 1rem; margin-bottom: 0.25rem; }
+.wishes-widget .section-subtitle { font-size: 0.8rem; }
+.wishes-widget .form-label { font-size: 0.8rem; }
+.wishes-widget .form-control {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+}
+.wishes-widget .btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
 
 /* Tweaks */
 h3 { font-weight: 600; }
@@ -176,5 +244,129 @@ footer { color: var(--muted); }
 
 /* Navbar refinement */
 .navbar-brand { font-family: 'Playfair Display', Georgia, serif; letter-spacing: 0.02em; }
-.nav-link { color: var(--text); opacity: 0.8; }
-.nav-link:hover { opacity: 1; }
+.nav-links .nav-link {
+  color: #0a0a0a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  opacity: 1;
+}
+.nav-links .nav-link.travel-link {
+  white-space: nowrap; /* keep “Travel & Stay” on one line */
+  letter-spacing: 0.01em;
+}
+.nav-links .nav-link:hover {
+  color: #0a0a0a;
+  background: #ffffff;
+  border-color: transparent;
+}
+.nav-links .btn.btn-outline-primary.btn-sm {
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: none;
+  box-shadow: none;
+}
+.navbar.bg-transparent {
+  backdrop-filter: saturate(1.1) blur(6px);
+  position: relative;
+  z-index: 10;
+}
+
+/* Ceremony page enhancements */
+.ceremony-hero {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 24px;
+}
+.ceremony-hero h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  color: #0b2a4a; /* royal navy */
+}
+.ceremony-hero p { color: var(--muted); }
+
+.timeline {
+  position: relative;
+  margin: 16px auto;
+  max-width: 760px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #cfe4ff; /* light blue border */
+}
+.timeline-item {
+  position: relative;
+  padding-left: 56px;
+  margin-bottom: 16px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6; /* soft royal blue */
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+}
+.timeline-card {
+  background: #ffffff;
+  border: 1px solid #cfe4ff;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+/* Scope normal text to slate gray on ceremony & travel containers */
+.ceremony-bg .page-container,
+.travel-bg .page-container { color: #4b5563; }
+
+/* Mobile responsive tweaks */
+@media (max-width: 576px) {
+  .container { padding-left: 12px; padding-right: 12px; }
+  .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
+  .hero-subtitle { font-size: clamp(1.2rem, 6.5vw, 1.8rem); }
+  .countdown-widget { top: auto; bottom: 12px; right: 24px; }
+}
+
+@media (max-width: 768px) {
+  .ceremony-grid { grid-template-columns: 1fr; }
+}
+
+/* Gallery grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid rgba(17,24,39,0.12);
+  box-shadow: 0 6px 16px -8px rgba(17,24,39,0.25);
+}
+
+/* Drive folder iframe */
+.drive-embed iframe {
+  width: 100%;
+  height: 480px;
+  border: 1px solid rgba(17,24,39,0.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.9);
+}
+@media (max-width: 576px) {
+  .drive-embed iframe { height: 360px; }
+}

@@ -47,3 +47,12 @@ class Config:
     ROOT_USER = os.environ.get("ROOT_USER", "root")
     # Session lifetime: expire login after 5 minutes
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=5)
+
+    # Gallery configuration: Google Drive folder + optional image IDs
+    # Set via env for production, with sensible defaults for dev.
+    DRIVE_FOLDER_URL = os.environ.get(
+        "DRIVE_FOLDER_URL",
+        "https://drive.google.com/drive/folders/1AXkQ11ZDW2jlrXlv1C3Pse4eqYhDnG1e",
+    )
+    # Comma-separated list of file IDs; optional.
+    DRIVE_IMAGE_IDS = os.environ.get("DRIVE_IMAGE_IDS", "")
