@@ -10,14 +10,16 @@ spec:
   selector:
     matchLabels:
       app: ammara-app
+      version: v1
   template:
     metadata:
       labels:
         app: ammara-app
+        version: v1
     spec:
       containers:
         - name: ammara-app
-          image: devopsusr/ammara:v3
+          image: devopsusr/ammara:v6
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
@@ -33,7 +35,7 @@ spec:
                 secretKeyRef:
                   name: ammara-secrets
                   key: mysql-root-password
-          readynessProbe:
+          readinessProbe:
             httpGet: 
               path: /healthz
               port: 5000
@@ -52,4 +54,3 @@ spec:
           envFrom:
             - secretRef:
                 name: ammara-db-secret
-      restartPolicy: Always
