@@ -26,10 +26,32 @@ spec:
               service:
                 name: ammara-app
                 port:
-                  number: 5000                  
+                  number: 5000            
+    - host: ammarwithbushra.in
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ammara-app
+                port:
+                  number: 5000
+    - host: www.ammarwithbushra.in
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ammara-app
+                port:
+                  number: 5000                             
   tls:
     - hosts:
         - ammara.co.in
         - www.ammara.co.in
+        - ammarwithbushra.in
+        - www.ammarwithbushra.in
       secretName: ammara-co-in-tls
 
