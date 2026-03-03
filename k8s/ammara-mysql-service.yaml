@@ -4,7 +4,6 @@ metadata:
   name: ammara-mysql
   labels:
     app: ammara-mysql
-  namespace: mysql-db
 spec:
   type: ClusterIP
   selector:

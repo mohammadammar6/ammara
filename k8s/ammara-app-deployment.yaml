@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ammara-app
-          image: devopsusr/ammara:v6
+          image: devopsusr/ammara:v11
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
