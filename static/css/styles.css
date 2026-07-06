@@ -90,7 +90,7 @@ body {
   font-weight: 700;
   font-size: clamp(2.2rem, 5vw, 4rem);
   line-height: 1.1;
-  color: #fde2e8; /* off-white with pink tint */
+  color: #f7f5f8; /* off-white with pink tint */
 }
 .hero-title .amp { color: #dc4d6b; }
 .hero-subtitle {
@@ -334,14 +334,30 @@ footer { color: var(--muted); }
 
 /* Mobile responsive tweaks */
 @media (max-width: 576px) {
-  .container { padding-left: 12px; padding-right: 12px; }
-  .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
-  .hero-subtitle { font-size: clamp(1.2rem, 6.5vw, 1.8rem); }
-  .countdown-widget { top: auto; bottom: 12px; right: 24px; }
+  /* Stack ceremony items in a single column on mobile */
+  .ceremony-grid { grid-template-columns: 1fr; }
+
+  /* Smaller hero title on mobile for better fit */
+  .hero-title { font-size: 2.3rem !important; }
+
+  /* Prevent pills from causing horizontal overflow */
+  .pill-badges { justify-content: flex-start; }
+  .pill { max-width: 100%; }
+
+  /* Tighten countdown widget spacing on small screens */
+  .countdown-widget { top: 8px; right: 8px; padding: 4px 6px; }
+
+  /* Ensure navbar brand and toggler fit comfortably */
+  .navbar .navbar-brand { font-size: 1rem; }
 }
 
 @media (max-width: 768px) {
   .ceremony-grid { grid-template-columns: 1fr; }
+}
+
+/* Larger hero title on laptops/desktops */
+@media (min-width: 992px) {
+  .hero-title { font-size: 5.5rem !important; }
 }
 
 /* Gallery grid */

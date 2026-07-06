@@ -13,3 +13,19 @@ spec:
       targetPort: 5000
       protocol: TCP
       name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ammara-app
+  labels:
+    app: ammara-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: ammara-app
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      name: http
