@@ -1,7 +1,3 @@
--- Initialize database and schema. Runs only if data dir is empty.
--- Do NOT set passwords here; Kubernetes env vars will provide them.
-
--- Create application database (name can be customized via MYSQL_DATABASE env var too).
 CREATE DATABASE IF NOT EXISTS marriage_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE marriage_app;
 
