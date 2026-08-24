@@ -3,6 +3,7 @@ kubeconfig/
 kubeconfigs/
 mysql/
 venv/
+.venv/
 .env
 instance/
 *.log
