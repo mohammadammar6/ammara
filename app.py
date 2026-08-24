@@ -274,9 +274,9 @@ def create_app():
         barat_time_text = "8:00 AM"
         barat_venue_text = "Haji Mohammad Jamil Akhter's Residence"
 
-        # Barat arrival details
-        barat_arrival_time_text = "6:00 PM"
-        barat_arrival_venue_text = "Mohammad Yunus's Residence"
+        # nikah details
+        nikah_time = "After Maghrib Namaz"
+        nikah_venue_text = "Mohammad Yunus's Residence"
 
         walima_date_text = "30 March 2026"
         walima_time_text = "12:00 PM"
@@ -287,8 +287,8 @@ def create_app():
             barat_date=barat_date_text,
             barat_time=barat_time_text,
             venue=barat_venue_text,
-            barat_arrival_time=barat_arrival_time_text,
-            barat_arrival_venue=barat_arrival_venue_text,
+            nikah_time=nikah_time,
+            nikah_venue=nikah_venue_text,
             walima_date=walima_date_text,
             walima_time=walima_time_text,
             walima_venue=walima_venue_text,
